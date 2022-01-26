@@ -1,7 +1,0 @@
-To update scrinchstore:
-
- del scrinchstore
- keytool -genkey -keystore scrinchstore -alias scrinch
- keytool -selfcert -alias scrinch -keystore scrinchstore -validity 3600
- keytool -list -keystore scrinchstore
- 

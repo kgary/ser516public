@@ -1,1 +1,0 @@
-start javaw -Xmx128m -jar scrinch-1.2-RACHMANINOV.jar
