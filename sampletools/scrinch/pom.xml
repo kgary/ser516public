@@ -19,8 +19,8 @@
 
     <modules>
         <module>application</module>
-        <module>webstart</module>
-        <module>nbmodule</module>
+        <!-- <module>webstart</module> -->
+        <!-- <module>nbmodule</module> -->
     <module>distribution</module>
   </modules>
 
