@@ -1,3 +1,10 @@
+## Dr. Gary
+Feelings is a simple approximation of a niko-niko, or "mood" calendar. It asks individuals to select a mood using
+some spooky-looking icons, and provides simple reporting measures.
+
+It is an 8 year-old project in Python (I think Python 2.7 works here instead of python3 but need to verify. 
+The original project is here: https://github.com/glebb/feelings
+
 feelings
 ========
 

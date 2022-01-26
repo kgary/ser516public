@@ -1,3 +1,8 @@
+## Dr. Gary
+This project runs pretty cleanly out-of-the-box. It uses sockets not HTP and runs on the command-line using python3.
+I ran it on multiple hosts at home and it worked with no issues. The original project is only 6 months old and is at
+https://github.com/kennit/delta_poker
+
 # delta_poker
 
 A small Python3 application for Agile teams that want to use poker planning
