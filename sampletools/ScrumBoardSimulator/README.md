@@ -6,6 +6,12 @@ to use a Java8 version I had, as JavaFX is in there and the buidl works cleanly.
 a bug or two, but the main thing is this simulation really hardcodes the initial data and just randomizes
 tile names. I think there are multiple upgrades that are easily possible.
 
+Because it is tricky to build, I imported with my already built files under folder "target". You can 
+directly run the jarfile in there using java-jar.
+
+The original project is at https://github.com/betrcode/ScrumBoardSimulator
+
+
 # Scrum Board Simulator
 or: Scrum Game. It is a simulation of a Scrum Board where the idea is that you can play with different variables such as
 team, team velocity, sprint length, stories and story sizes, work-in-progress limits and random disasters such as
