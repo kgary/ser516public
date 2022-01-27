@@ -1,5 +1,5 @@
 ## Dr. Gary
-This project runs pretty cleanly out-of-the-box. It uses sockets not HTP and runs on the command-line using python3.
+This project runs pretty cleanly out-of-the-box. It uses sockets not HTTP and runs on the command-line using python3.
 I ran it on multiple hosts at home and it worked with no issues. The original project is only 6 months old and is at
 https://github.com/kennit/delta_poker
 
