@@ -1,0 +1,1 @@
+There are a lot of resources on Github out there. Here is a curated list useful on the project. Further some files posted here are from our undergraduate class, useful if you have not used GitHub before.
