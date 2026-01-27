@@ -1,0 +1,42 @@
+Commands: - docker <command> --help on anything
+CONTAINER commands start with "docker container"
+- "run --publish <hostport>:<containerport> --name <myname> --detach <image>"
+  -> if <image> is cached locally, it is used, else it is fetched from DockerHub
+  -> A new container is created by instantiating the image
+- docker container run -it ... <-- -i is mapping STDIN to your terminal, -t is tty
+- docker container exec -it <container id> <command>  <-- can you bash here to get into
+- docker container ls [-a]
+  -> lists all running containers (-a or --all shows all)
+- docker [container] ps shows the same thing as docker container ls
+- docker container start/stop starts/stops containers that already exist & from the state you left them in
+  - -ai on start makes it so you pick up where you left off in an interactive shell
+- docker container rm [-f] -> removes a container
+- docker container logs <container id or name>
+
+
+Example mysql: docker container run -d -p 3306:3306 --name mysqldb -e MYSQL_RANDOM_ROOT_PASSWORD=yes mysql
+-> Look in logs for GENERATED ROOT PASSWORD
+
+IMAGE commands
+docker image ls           -> lists all images in local cache
+docker rmi <image id>     -> removes the image
+docker image history <id> -> shows the history of changes to the image
+       -> each change the image is a "layer", and can be stored in a Dockerfile
+docker image tag SOURCE_IMAGE[:tag] TARGET_IMAGE[:tag]
+docker image push <repository>
+docker image pull <name>
+
+OTHER
+docker cp CONTAINER:<file path> localfile
+docker cp localfile CONTAINER:<file path>
+
+NETWORKING commands
+- docker network ls		  -> show networks
+- docker network inspect  	  -> inspects a network
+- docker network create --driver  -> create a network
+- docker network connect          -> attach a network to a container
+- docker network disconnect	  -> detach a network from a container
+-> You can use --network <name> on docker container run to connect a new container to a network you choose
+-> docker network connect <network id> <container id> connects container to the network
+   -> You can disconnect with the same just use disconnect
+   

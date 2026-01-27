@@ -1,0 +1,36 @@
+#docker-compose.yml
+
+services:
+  # MySQL Database Container
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      # Source [3] mentions using environment variables for passwords
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: my_database
+    networks:
+      - docker-ser516
+
+  # Java Spring REST API Container
+  java-api:
+    # This would use the Dockerfile script for instantiation discussed in #2 [4]
+    build: ./java-api-directory 
+    depends_on:
+      - mysql-db
+    networks:
+      - docker-ser516
+
+  # Python Flask Webapp Container
+  flask-app:
+    build: ./python-flask-directory
+    ports:
+      - "5000:5000"
+    depends_on:
+      - java-api
+    networks:
+      - docker-ser516
+
+# Custom network to allow isolated communication between these containers [5]
+networks:
+  docker-ser516:
+    driver: bridge # Source [6] mentions network drivers
