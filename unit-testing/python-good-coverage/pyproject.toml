@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "calculator-demo"
+version = "1.0.0"
+description = "Calculator application with pytest, behave, coverage.py, and pylint"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "calculator", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+coverage = {extras = ["toml"], version = "^7.3.0"}
+behave = "^1.2.6"
+pylint = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--cov=src/calculator",
+    "--cov-report=html:htmlcov",
+    "--cov-report=xml:coverage.xml",
+    "--cov-report=term-missing",
+    "--cov-fail-under=90"
+]
+
+[tool.coverage.run]
+source = ["src/calculator"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/site-packages/*"
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod"
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.pylint.main]
+py-version = "3.8"
+ignore = ["tests", ".git", "__pycache__", "venv", ".venv"]
+recursive = true
+
+[tool.pylint.messages_control]
+disable = [
+    "C0111",  # missing-docstring (we have docstrings, this is just to show the config)
+]
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pylint.design]
+min-public-methods = 1
+max-attributes = 10
+
+[tool.pylint.reports]
+output-format = "text"
+reports = true
+score = true
