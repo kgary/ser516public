@@ -15,55 +15,63 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    pip3 install poetry==1.6.1
-                    poetry config virtualenvs.in-project true
-                    poetry install --no-interaction --no-ansi
-                '''
+                dir('unit-testing/python-bad-coverage') {
+                    sh '''
+                        pip3 install poetry==1.6.1
+                        poetry config virtualenvs.in-project true
+                        poetry install --no-interaction --no-ansi
+                    '''
+                }
             }
         }
         
         stage('Test') {
             steps {
-                sh '''
-                    poetry run pytest --verbose \
-                        --cov=src/calculator \
-                        --cov-report=html:htmlcov \
-                        --cov-report=xml:coverage.xml \
-                        --cov-report=term-missing \
-                        --cov-fail-under=30 \
-                        --junitxml=test-results.xml
-                '''
+                dir('unit-testing/python-bad-coverage') {
+                    sh '''
+                        poetry run pytest --verbose \
+                            --cov=src/calculator \
+                            --cov-report=html:htmlcov \
+                            --cov-report=xml:coverage.xml \
+                            --cov-report=term-missing \
+                            --cov-fail-under=30 \
+                            --junitxml=test-results.xml
+                    '''
+                }
             }
         }
         
         stage('BDD Tests') {
             steps {
-                sh 'poetry run behave --format=pretty'
+                dir('unit-testing/python-bad-coverage') {
+                    sh 'poetry run behave --format=pretty'
+                }
             }
         }
         
         stage('Pylint Analysis') {
             steps {
-                sh 'poetry run pylint src/calculator --output-format=parseable --reports=yes > pylint-report.txt || true'
+                dir('unit-testing/python-bad-coverage') {
+                    sh 'poetry run pylint src/calculator --output-format=parseable --reports=yes > pylint-report.txt || true'
+                }
             }
         }
     }
     
     post {
         always {
-            junit allowEmptyResults: true, testResults: 'test-results.xml'
+            junit allowEmptyResults: true, testResults: 'unit-testing/python-bad-coverage/test-results.xml'
             
             publishHTML([
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
-                reportDir: 'htmlcov',
+                reportDir: 'unit-testing/python-bad-coverage/htmlcov',
                 reportFiles: 'index.html',
                 reportName: 'Coverage Report'
             ])
             
-            archiveArtifacts artifacts: 'coverage.xml,pylint-report.txt', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'unit-testing/python-bad-coverage/coverage.xml,unit-testing/python-bad-coverage/pylint-report.txt', allowEmptyArchive: true
         }
         
         success {
