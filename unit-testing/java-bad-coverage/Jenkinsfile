@@ -14,31 +14,41 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                dir('unit-testing/java-bad-coverage') {
+                    sh 'mvn clean compile'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                dir('unit-testing/java-bad-coverage') {
+                    sh 'mvn test'
+                }
             }
         }
 
         stage('Code Coverage') {
             steps {
-                sh 'mvn jacoco:report'
+                dir('unit-testing/java-bad-coverage') {
+                    sh 'mvn jacoco:report'
+                }
             }
         }
 
         stage('SpotBugs Analysis') {
             steps {
-                sh 'mvn spotbugs:spotbugs'
+                dir('unit-testing/java-bad-coverage') {
+                    sh 'mvn spotbugs:spotbugs'
+                }
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests'
+                dir('unit-testing/java-bad-coverage') {
+                    sh 'mvn package -DskipTests'
+                }
             }
         }
     }
@@ -49,7 +59,7 @@ pipeline {
             junit '**/target/surefire-reports/*.xml'
             
             // Publish code coverage
-            recordCoverage(tools: [[parser: 'JACOCO', pattern: 'target/site/jacoco/jacoco.xml']])
+            recordCoverage(tools: [[parser: 'JACOCO', pattern: 'unit-testing/java-bad-coverage/target/site/jacoco/jacoco.xml']])
             
             // Archive SpotBugs HTML report
             archiveArtifacts artifacts: '**/target/spotbugs.html', allowEmptyArchive: true
