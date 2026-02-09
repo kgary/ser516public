@@ -1,19 +1,46 @@
-# Maven
+# Maven build directory
 target/
+
+# Maven files
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Java compiled files
+*.class
 *.jar
 *.war
 *.ear
 
-# IDE
+# IDE files
 .idea/
 *.iml
 .vscode/
 .settings/
 .project
 .classpath
+*.swp
+*.swo
+*~
 
-# OS
+# OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
+hs_err_pid*
+replay_pid*
 
 # Test reports
-*.log
+test-results/
+surefire-reports/
