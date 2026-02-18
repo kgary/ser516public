@@ -23,7 +23,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir('unit-testing/java-bad-coverage') {
-                    sh 'mvn test'
+                    sh 'mvn verify'
                 }
             }
         }

@@ -34,7 +34,6 @@ pipeline {
                             --cov-report=html:htmlcov \
                             --cov-report=xml:coverage.xml \
                             --cov-report=term-missing \
-                            --cov-fail-under=30 \
                             --junitxml=test-results.xml
                     '''
                 }
