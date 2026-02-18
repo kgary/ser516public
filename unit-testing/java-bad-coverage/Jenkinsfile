@@ -28,14 +28,6 @@ pipeline {
             }
         }
 
-        stage('Code Coverage') {
-            steps {
-                dir('unit-testing/java-bad-coverage') {
-                    sh 'mvn jacoco:report'
-                }
-            }
-        }
-
         stage('SpotBugs Analysis') {
             steps {
                 dir('unit-testing/java-bad-coverage') {
