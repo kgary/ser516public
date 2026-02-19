@@ -1,7 +1,7 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3'
+        dockerfile {
+            dir 'unit-testing/python-bad-coverage'
             args '-u root'
         }
     }
