@@ -1,8 +1,9 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'Maven'
+    agent {
+        dockerfile {
+            dir 'unit-testing/java-good-coverage'
+            args '-v $HOME/.m2:/root/.m2'
+        }
     }
 
     stages {

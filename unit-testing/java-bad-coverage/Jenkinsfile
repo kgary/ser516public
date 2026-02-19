@@ -1,8 +1,9 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'Maven'
+    agent {
+        dockerfile {
+            dir 'unit-testing/java-bad-coverage'
+            args '-v $HOME/.m2:/root/.m2'
+        }
     }
 
     stages {
@@ -23,15 +24,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir('unit-testing/java-bad-coverage') {
-                    sh 'mvn test'
-                }
-            }
-        }
-
-        stage('Code Coverage') {
-            steps {
-                dir('unit-testing/java-bad-coverage') {
-                    sh 'mvn jacoco:report'
+                    sh 'mvn verify'
                 }
             }
         }
