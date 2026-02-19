@@ -1,8 +1,0 @@
-*.dat
-*.dot
-*.png
-*.sw[op]
-/dist/
-/taiga.conf
-/taiga.conf.template
-/taiga_stats/__pycache__/
