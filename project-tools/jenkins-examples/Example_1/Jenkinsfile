@@ -18,7 +18,9 @@ pipeline {
             steps {
                 echo 'Compiling Java code...'
                 echo 'Taiga Task: TG-5 - Configure Jenkins Build Pipeline'
-                sh 'mvn clean compile'
+                dir('project-tools/jenkins-examples/Example_1') {
+                    sh 'mvn clean compile'
+                }
             }
         }
         
@@ -26,7 +28,9 @@ pipeline {
             steps {
                 echo 'Running JUnit tests...'
                 echo 'Taiga Tasks: TG-3 (Calculator Tests) and TG-4 (StringUtils Tests)'
-                sh 'mvn test'
+                dir('project-tools/jenkins-examples/Example_1') {
+                    sh 'mvn test'
+                }
             }
             post {
                 always {
@@ -39,7 +43,9 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging application...'
-                sh 'mvn package -DskipTests'
+                dir('project-tools/jenkins-examples/Example_1') {
+                    sh 'mvn package -DskipTests'
+                }
             }
         }
         
