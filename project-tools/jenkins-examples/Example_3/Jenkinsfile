@@ -16,7 +16,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('Example_3') {
+                dir('project-tools/jenkins-examples/Example_3') {
                     sh '''
                         pip3 install poetry
                         poetry config virtualenvs.in-project true
@@ -28,7 +28,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('Example_3') {
+                dir('project-tools/jenkins-examples/Example_3') {
                     sh 'poetry run pytest tests/ -v -s'
                 }
             }
@@ -39,7 +39,7 @@ pipeline {
         // -------------------------------------------------------
         // stage('My Custom Stage') {
         //     steps {
-        //         dir('Example_3') {
+        //         dir('project-tools/jenkins-examples/Example_3') {
         //             // sh 'echo "Hello from my custom stage!"'
         //             // sh 'poetry run pytest tests/test_greeter.py::TestGreeter::test_greet_formal -v -s'
         //         }
