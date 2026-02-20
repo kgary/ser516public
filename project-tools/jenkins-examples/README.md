@@ -6,8 +6,8 @@ This repository contains a set of examples used in **SER516 (Software Agility)**
 
 ## Examples Overview
 
-### Example_1 — Taiga + Jenkins Integration
-Demonstrates how a project management tool (Taiga) integrates with a CI pipeline (Jenkins). Shows how commit messages can reference Taiga tasks and how Jenkins builds can be linked back to project tasks for full traceability from task → code → build.
+### Example_1 — Github + Jenkins Integration
+Demonstrates how a Github repo integrates with a CI pipeline (Jenkins). Shows how unit test can be run automatically after every commit using Jenkins.
 
 ### Example_2 — Java Unit Testing with JUnit 5
 Demonstrates how to write basic unit tests in Java using **JUnit 5** and run them automatically through a **Jenkins** pipeline triggered on every commit. Uses **Maven** for build automation.
