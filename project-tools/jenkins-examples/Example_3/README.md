@@ -54,7 +54,7 @@ Make sure you have the following installed:
 
 ## Step 2 — Set Up Your Own Repository
 
-> **⚠️ Important:** Do NOT commit directly to the class repo. Follow the steps below carefully.
+> **Important:** Do NOT commit directly to the class repo. Follow the steps below carefully.
 
 ### 2.1 — Create your own public GitHub repository
 1. Go to [github.com](https://github.com) and create a new repository (e.g. `my-ser516-ica`)
