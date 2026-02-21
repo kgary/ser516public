@@ -1,8 +1,8 @@
 package com.asu.ser516;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * JUnit tests for StringUtils class
@@ -14,7 +14,7 @@ public class StringUtilsTest {
 
     private StringUtils stringUtils;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         stringUtils = new StringUtils();
     }

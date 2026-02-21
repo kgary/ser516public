@@ -34,7 +34,7 @@ Example_2/
 ## Step 1 — Prerequisites
 
 Make sure you have the following installed:
-- Java 11 or higher (`java -version`)
+- Java 21 or higher (`java -version`)
 - Maven 3.6 or higher (`mvn -version`)
 
 ## Step 2 — Clone the Repository

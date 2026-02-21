@@ -1,8 +1,8 @@
 package com.asu.ser516;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * JUnit tests for Calculator class
@@ -14,7 +14,7 @@ public class CalculatorTest {
 
     private Calculator calculator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         calculator = new Calculator();
     }
@@ -57,10 +57,10 @@ public class CalculatorTest {
         assertEquals(-2.0, calculator.divide(10, -5), 0.001);
     }
 
-    @Test(expected = ArithmeticException.class)
-    public void testDivideByZero() {
-        // Taiga Issue: TG-3.6 - Test division by zero throws exception
-        calculator.divide(5, 0);
+    @Test
+    void testDivideByZero() {
+        // Cleaner syntax for single-line expectations
+        assertThrows(ArithmeticException.class, () -> calculator.divide(5, 0));
     }
 
     @Test
@@ -79,10 +79,10 @@ public class CalculatorTest {
         assertEquals(0.0, calculator.squareRoot(0), 0.001);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSquareRootOfNegative() {
         // Taiga Issue: TG-3.9 - Test square root of negative throws exception
-        calculator.squareRoot(-1);
+        assertThrows(IllegalArgumentException.class, () -> calculator.squareRoot(-1));
     }
 
     @Test
