@@ -33,7 +33,7 @@ Example_2/
 
 ---
 
-> **⚠️ Important — Create Your Own Public Repo:**  
+> **Important — Create Your Own Public Repo:**  
 > Do NOT commit directly to the class repo. You must create your own **public** GitHub repository and work from there. Jenkins needs to access your repo to trigger builds, so it must be **public**.
 
 ---
@@ -46,7 +46,7 @@ Make sure you have the following installed:
 
 ## Step 2 — Set Up Your Own Repository
 
-> **⚠️ Important:** Do NOT commit directly to the class repo. Follow the steps below carefully.
+> **Important:** Do NOT commit directly to the class repo. Follow the steps below carefully.
 
 ### 2.1 — Create your own public GitHub repository
 1. Go to [github.com](https://github.com) and create a new repository (e.g. `my-ser516-ica`)
