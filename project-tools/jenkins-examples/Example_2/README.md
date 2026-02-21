@@ -47,8 +47,10 @@ Make sure you have the following installed:
 git clone -b jenkins-examples <class-repo-url>
 ```
 3. Copy the `Example_2` folder into your own repo:
+
+Navigate to the repo that you created on your local system
 ```bash
-cp -r <path_to_cloned_repo>/ser516public/project-tools/jenkins-examples/Example_2 <path_to_my_repo>/my-ser516-ica/
+cp -r <path_to_cloned_repo>/ser516public/project-tools/jenkins-examples/Example_2 .
 cd my-ser516-ica
 git add .
 git commit -m "Add Example_2"
