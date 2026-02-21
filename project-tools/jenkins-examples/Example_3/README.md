@@ -51,31 +51,32 @@ Make sure you have the following installed:
 > echo 'export PATH="/Users/<your-username>/Library/Python/3.9/bin:$PATH"' >> ~/.bash_profile
 > source ~/.bash_profile
 > ```
+3.9 is used here as an example, change it to where python lives on your system.
 
 ## Step 2 — Set Up Your Own Repository
 
 > **Important:** Do NOT commit directly to the class repo. Follow the steps below carefully.
 
 ### 2.1 — Create your own public GitHub repository
-1. Go to [github.com](https://github.com) and create a new repository (e.g. `my-ser516-ica`)
+1. Go to [github.com](https://github.com) and create a new repository (e.g. `asurite-ser516-assign2`)
 2. Make sure it is set to **Public** so Jenkins can access it
 3. Clone your own repo to your local machine:
 ```bash
 git clone <your-repo-url>
-cd my-ser516-ica
+cd asurite-ser516-assign2
 ```
 
 ### 2.2 — Clone the class repo separately
 Open a new terminal window and clone the class repo:
 ```bash
-git clone -b jenkins-examples <class-repo-url>
+git clone https://github.com/kgary/ser516public
 ```
-This will create a folder (e.g. `ser516public`) on your machine with all the example files.
+This will create a folder (e.g. `ser516public`) on your machine with all the example files for the class. Alternatively you could choose to Download the repo form GitHub in your browser, but then you can not do pulls later to get class update. 
 
 ### 2.3 — Copy Example_3 into your own repo
 Make sure you are inside your own repo folder, then run:
 ```bash
-# You should be inside my-ser516-ica when you run this
+# You should be inside asurite-ser516-assign2 when you run this
 cp -r <local_path_to_cloned_class_repo>/ser516public/project-tools/jenkins-examples/Example_3 .
 ```
 The `.` at the end means "copy into the current directory". 
@@ -87,16 +88,20 @@ cp -r ~/Desktop/516/ser516public/project-tools/jenkins-examples/Example_3 .
 
 After this, your repo should look like:
 ```
-my-ser516-ica/
+asurite-ser516-assign2/
 └── Example_3/
     ├── Jenkinsfile
     ├── pyproject.toml
     ├── README.md
     └── src/
 ```
+Note: When you copy over to your local repo folder, make sure you do not have any hidden .git directories brought over from the ser516public repo. Do
+```
+mac$ ls -la
+dos> dir /A
+```
 
-### you can also download the Example_3 [here](https://drive.google.com/file/d/1fOvnuz2dDf46pBDd7A3I6iyovdd3B6er/view?usp=sharing). And you can directly move into your repo.
-
+If the folder is there, remove it. You can then add, commit and push the folder to your personal GitHub account (a new .git folder is created).
 
 ### 2.4 — Verify the Jenkinsfile
 > **Important:** Open `Example_2/Jenkinsfile` and make sure the `dir()` block says `Example_3` or the directory to where Example_2 exists on your local, and NOT the full class repo path. It should look like this:
@@ -105,7 +110,7 @@ my-ser516-ica/
 >     sh 'mvn clean compile'
 > }
 > ```
-> If it says `dir('project-tools/jenkins-examples/Example_2')`, update it to `dir('Example_3')` or the directory to where Example_2 exists on your local before pushing. This is the most common mistake and will cause the pipeline to fail with `No POM in this directory`.
+> If it says `dir('project-tools/jenkins-examples/Example_3')`, update it to `dir('Example_3')` or the directory to where Example_3 exists on your local before pushing. This is the most common mistake and will cause the pipeline to fail with `No POM in this directory`.
 
 ### 2.5 — Commit and push to your own repo
 ```bash
