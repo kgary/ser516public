@@ -35,24 +35,40 @@ Make sure you have the following installed:
 - Python 3.8 or higher (`python3 --version`)
 - Poetry (`poetry --version`) — install via `pip3 install poetry` if missing
 
-> **Note:** After installing Poetry via pip, it may not be on your PATH. If `poetry --version` returns command not found, run:
+> **Note (Mac Terminal only):** After installing Poetry via pip, it may not be on your PATH. If `poetry --version` returns command not found, open your Mac Terminal and run:
 > ```bash
 > export PATH="/Users/<your-username>/Library/Python/3.9/bin:$PATH"
 > ```
-> To make this permanent:
+> To make this permanent (so you do not have to run it every time you open a new terminal):
 > ```bash
 > echo 'export PATH="/Users/<your-username>/Library/Python/3.9/bin:$PATH"' >> ~/.bash_profile
 > source ~/.bash_profile
 > ```
 
-## Step 2 — Clone the Repository
+## Step 2 — Set Up Your Own Repository
 
+> **Important:** Do NOT commit directly to the class repo. Instead, create your own GitHub repository and copy the example files into it.
+
+1. Create a new **public** repository on GitHub (e.g. `my-ser516-ica`) — make sure it is set to **Public** so Jenkins can access it
+2. Clone the class repo to get the example files:
 ```bash
-git clone <repo-url>
-cd <repo-folder>/Example_3
+git clone -b jenkins-examples <class-repo-url>
+```
+3. Copy the `Example_3` folder into your own repo:
+```bash
+cp -r SER516_Examples/Example_3 my-ser516-ica/
+cd my-ser516-ica
+git add .
+git commit -m "Add Example_3"
+git push
 ```
 
 ## Step 3 — Install Dependencies and Run Tests Locally
+
+Navigate into the Example_3 folder:
+```bash
+cd Example_3
+```
 
 Install dependencies:
 ```bash
@@ -91,15 +107,14 @@ PASSED
 2. Navigate to your group folder
 3. Click **New Item** → name it `Example_3` → select **Pipeline** → click OK
 4. Under **Pipeline**, set **Definition** to `Pipeline script from SCM`
-5. Set **SCM** to `Git` and enter your repository URL
-6. Under **Branches to build**, change `*/master` to `*/main`
-7. Set **Script Path** to the path of the Jenkinsfile relative to the root of your repo.  
-   For example, if your repo contains an `Example_3` folder, set it to `Example_3/Jenkinsfile`
+5. Set **SCM** to `Git` and enter your own repository URL
+6. Under **Branches to build**, enter the branch name of your own repository (e.g. `*/main` or `*/master`)
+7. Set **Script Path** to `Example_3/Jenkinsfile`
 8. Under **Build Triggers**, check **Poll SCM** and set the schedule to `* * * * *` (polls every minute)
 9. Click **Save** then click **Build Now** to trigger the first build
 
 > **Important — Docker Agent:**  
-> The Jenkinsfile uses a Docker agent (`python:3`) to run the pipeline inside a Python container. This means Jenkins must have Docker available and running. If the build fails with a Docker-related error, Please reach out.  
+> The Jenkinsfile uses a Docker agent (`python:3`) to run the pipeline inside a Python container. This means Jenkins must have Docker available and running. If the build fails with a Docker-related error, check with your instructor.  
 > On the first run, Jenkins will pull the `python:3` image from Docker Hub which may take a minute or two. Subsequent builds will be faster.
 
 ## Step 6 — Trigger the Pipeline with a Commit
