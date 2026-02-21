@@ -70,7 +70,14 @@ Make sure you are inside your own repo folder (`my-ser516-ica`), then run:
 # You should be inside my-ser516-ica when you run this
 cp -r <path_to_cloned_class_repo>/ser516public/project-tools/jenkins-examples/Example_2 .
 ```
-The `.` at the end means "copy into the current directory". After this, your repo should look like:
+The `.` at the end means "copy into the current directory". 
+
+For example, if you cloned the class repo at `Desktop/516/ser516public`, the command would be:
+```bash
+cp -r ~/Desktop/516/ser516public/project-tools/jenkins-examples/Example_2 .
+```
+
+After this, your repo should look like:
 ```
 my-ser516-ica/
 └── Example_2/
