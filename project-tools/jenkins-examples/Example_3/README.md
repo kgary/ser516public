@@ -82,7 +82,7 @@ The `.` at the end means "copy into the current directory".
 
 For example, if you cloned the class repo at `Desktop/516/ser516public`, the command would be:
 ```bash
-cp -r ~/Desktop/516/ser516public/project-tools/jenkins-examples/Example_2 .
+cp -r ~/Desktop/516/ser516public/project-tools/jenkins-examples/Example_3 .
 ```
 
 After this, your repo should look like:
@@ -95,13 +95,13 @@ my-ser516-ica/
     └── src/
 ```
 ### 2.4 — Verify the Jenkinsfile
-> **Important:** Open `Example_2/Jenkinsfile` and make sure the `dir()` block says `Example_2` or the directory to where Example_2 exists on your local, and NOT the full class repo path. It should look like this:
+> **Important:** Open `Example_2/Jenkinsfile` and make sure the `dir()` block says `Example_3` or the directory to where Example_2 exists on your local, and NOT the full class repo path. It should look like this:
 > ```groovy
-> dir('Example_2') {
+> dir('Example_3') {
 >     sh 'mvn clean compile'
 > }
 > ```
-> If it says `dir('project-tools/jenkins-examples/Example_2')`, update it to `dir('Example_2')` or the directory to where Example_2 exists on your local before pushing. This is the most common mistake and will cause the pipeline to fail with `No POM in this directory`.
+> If it says `dir('project-tools/jenkins-examples/Example_2')`, update it to `dir('Example_3')` or the directory to where Example_2 exists on your local before pushing. This is the most common mistake and will cause the pipeline to fail with `No POM in this directory`.
 
 ### 2.5 — Commit and push to your own repo
 ```bash
