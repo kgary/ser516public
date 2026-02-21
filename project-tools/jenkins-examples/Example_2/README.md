@@ -34,17 +34,33 @@ Example_2/
 ## Step 1 — Prerequisites
 
 Make sure you have the following installed:
-- Java 21 or higher (`java -version`)
+- Java 11 or higher (`java -version`)
 - Maven 3.6 or higher (`mvn -version`)
 
-## Step 2 — Clone the Repository
+## Step 2 — Set Up Your Own Repository
 
+> **Important:** Do NOT commit directly to the class repo. Instead, create your own GitHub repository and copy the example files into it.
+
+1. Create a new repository on GitHub (e.g. `my-ser516-ica`)
+2. Clone the class repo to get the example files:
 ```bash
-git clone 
-cd /Example_2
+git clone -b jenkins-examples <class-repo-url>
+```
+3. Copy the `Example_2` folder into your own repo:
+```bash
+cp -r SER516_Examples/Example_2 my-ser516-ica/
+cd my-ser516-ica
+git add .
+git commit -m "Add Example_2"
+git push
 ```
 
 ## Step 3 — Build and Run the Tests Locally
+
+Navigate into the Example_2 folder:
+```bash
+cd Example_2
+```
 
 First, compile the main source code:
 ```bash
@@ -83,14 +99,13 @@ testGreet -> Expected: 'Hello, Alice!'  Got: 'Hello, Alice!'
 2. Navigate to your group folder
 3. Click **New Item** → name it `Example_2` → select **Pipeline** → click OK
 4. Under **Pipeline**, set **Definition** to `Pipeline script from SCM`
-5. Set **SCM** to `Git` and enter the repository URL:  
-   `https://github.com/sshekh30/SER516_Examples.git`
-6. Under **Branches to build**, change `*/master` to `*/main`
+5. Set **SCM** to `Git` and enter your own repository URL
+6. Under **Branches to build**, enter the branch name of your own repository -under which your code resides(e.g. `*/main` or `*/master`)
 7. Set **Script Path** to `Example_2/Jenkinsfile`
 8. Under **Build Triggers**, check **Poll SCM** and set the schedule to `* * * * *` (polls every minute)
 9. Click **Save** then click **Build Now** to trigger the first build
 
-> **Important — Maven Installation Check:**
+> **Important — Maven Installation Check:**  
 > Before pushing, go to **Manage Jenkins → Tools → Maven installations** and check the following:
 > - **If no Maven installation exists** → Click **Add Maven**, give it a name (e.g. `Maven`), select a version, and click **Save**
 > - **If a Maven installation already exists** → Note the exact name it is saved under
