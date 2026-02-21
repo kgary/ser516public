@@ -68,7 +68,7 @@ This will create a folder (e.g. `ser516public`) on your machine with all the exa
 Make sure you are inside your own repo folder (`my-ser516-ica`), then run:
 ```bash
 # You should be inside my-ser516-ica when you run this
-cp -r <path_to_cloned_class_repo>/ser516public/project-tools/jenkins-examples/Example_2 .
+cp -r <local_path_to_cloned_class_repo>/ser516public/project-tools/jenkins-examples/Example_2 .
 ```
 The `.` at the end means "copy into the current directory". 
 
@@ -87,7 +87,16 @@ my-ser516-ica/
     └── src/
 ```
 
-### 2.4 — Commit and push to your own repo
+### 2.4 — Verify the Jenkinsfile
+> **Important:** Open `Example_2/Jenkinsfile` and make sure the `dir()` block says `Example_2` or the directory to where Example_2 exists on your local, and NOT the full class repo path. It should look like this:
+> ```groovy
+> dir('Example_2') {
+>     sh 'mvn clean compile'
+> }
+> ```
+> If it says `dir('project-tools/jenkins-examples/Example_2')`, update it to `dir('Example_2')` or the directory to where Example_2 exists on your local before pushing. This is the most common mistake and will cause the pipeline to fail with `No POM in this directory`.
+
+### 2.5 — Commit and push to your own repo
 ```bash
 git add .
 git commit -m "Add Example_2"
