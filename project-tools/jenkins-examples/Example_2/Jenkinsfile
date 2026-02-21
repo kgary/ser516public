@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('project-tools/jenkins-examples/Example_2') {
+                    sh 'mvn clean compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('project-tools/jenkins-examples/Example_2') {
+                    sh 'mvn test'
+                }
+            }
+            post {
+                always {
+                    junit 'Example_2/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        // -------------------------------------------------------
+        // Optional Stage: Uncomment and customize to experiment!
+        // -------------------------------------------------------
+        // stage('My Custom Stage') {
+        //     steps {
+        //         dir('project-tools/jenkins-examples/Example_2') {
+        //             // Try adding an echo message or run a specific test class
+        //             // echo 'Hello from my custom stage!'
+        //             // sh 'mvn test -Dtest=GreeterTest#testGreetFormal'
+        //         }
+        //     }
+        // }
+        // -------------------------------------------------------
+
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs above.'
+        }
+    }
+}

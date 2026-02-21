@@ -120,3 +120,20 @@ yarn-error.log*
 
 # Docker
 .dockerignore
+
+
+# Eclipse
+.project
+.settings/
+.classpath
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Temporary files
+*.tmp
+*.bak

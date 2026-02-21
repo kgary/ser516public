@@ -1,0 +1,60 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3'
+            args '-u root'
+        }
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('project-tools/jenkins-examples/Example_3') {
+                    sh '''
+                        pip3 install poetry
+                        poetry config virtualenvs.in-project true
+                        poetry install --no-interaction --no-ansi
+                    '''
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('project-tools/jenkins-examples/Example_3') {
+                    sh 'poetry run pytest tests/ -v -s'
+                }
+            }
+        }
+
+        // -------------------------------------------------------
+        // Optional Stage: Uncomment and customize to experiment!
+        // -------------------------------------------------------
+        // stage('My Custom Stage') {
+        //     steps {
+        //         dir('project-tools/jenkins-examples/Example_3') {
+        //             // sh 'echo "Hello from my custom stage!"'
+        //             // sh 'poetry run pytest tests/test_greeter.py::TestGreeter::test_greet_formal -v -s'
+        //         }
+        //     }
+        // }
+        // -------------------------------------------------------
+
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs above.'
+        }
+    }
+}
