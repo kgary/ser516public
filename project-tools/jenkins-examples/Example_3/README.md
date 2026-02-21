@@ -29,6 +29,13 @@ Example_3/
     └── test_greeter.py          # pytest unit tests
 ```
 
+---
+
+> **⚠️ Important — Create Your Own Public Repo:**  
+> Do NOT commit directly to the class repo. You must create your own **public** GitHub repository and work from there. Jenkins needs to access your repo to trigger builds, so it must be **public**.
+
+---
+
 ## Step 1 — Prerequisites
 
 Make sure you have the following installed:
@@ -47,17 +54,42 @@ Make sure you have the following installed:
 
 ## Step 2 — Set Up Your Own Repository
 
-> **Important:** Do NOT commit directly to the class repo. Instead, create your own GitHub repository and copy the example files into it.
+> **⚠️ Important:** Do NOT commit directly to the class repo. Follow the steps below carefully.
 
-1. Create a new **public** repository on GitHub (e.g. `my-ser516-ica`) — make sure it is set to **Public** so Jenkins can access it
-2. Clone the class repo to get the example files:
+### 2.1 — Create your own public GitHub repository
+1. Go to [github.com](https://github.com) and create a new repository (e.g. `my-ser516-ica`)
+2. Make sure it is set to **Public** so Jenkins can access it
+3. Clone your own repo to your local machine:
+```bash
+git clone <your-repo-url>
+cd my-ser516-ica
+```
+
+### 2.2 — Clone the class repo separately
+Open a new terminal window and clone the class repo:
 ```bash
 git clone -b jenkins-examples <class-repo-url>
 ```
-3. Copy the `Example_3` folder into your own repo:
+This will create a folder (e.g. `ser516public`) on your machine with all the example files.
+
+### 2.3 — Copy Example_3 into your own repo
+Make sure you are inside your own repo folder, then run:
 ```bash
-cp -r <path_to_cloned_repo>/ser516public/project-tools/jenkins-examples/Example_2 <path_to_my_repo>/my-ser516-ica/
-cd my-ser516-ica
+# You should be inside my-ser516-ica when you run this
+cp -r <path_to_cloned_class_repo>/ser516public/project-tools/jenkins-examples/Example_3 .
+```
+The `.` at the end means "copy into the current directory". After this, your repo should look like:
+```
+my-ser516-ica/
+└── Example_3/
+    ├── Jenkinsfile
+    ├── pyproject.toml
+    ├── README.md
+    └── src/
+```
+
+### 2.4 — Commit and push to your own repo
+```bash
 git add .
 git commit -m "Add Example_3"
 git push
@@ -103,7 +135,9 @@ PASSED
 
 ## Step 5 — Set Up the Jenkins Pipeline
 
-1. Log in to Jenkins at `https://swent0linux.asu.edu/jenkins/`
+> **Note:** Use `https://swent0linux.asu.edu/jenkins` for the class Jenkins server. If you have trouble accessing it, you can run Jenkins locally on your machine — refer to the course material for local Jenkins setup instructions.
+
+1. Log in to Jenkins
 2. Navigate to your group folder
 3. Click **New Item** → name it `Example_3` → select **Pipeline** → click OK
 4. Under **Pipeline**, set **Definition** to `Pipeline script from SCM`
