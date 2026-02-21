@@ -95,7 +95,7 @@ testGreet -> Expected: 'Hello, Alice!'  Got: 'Hello, Alice!'
 
 ## Step 5 — Set Up the Jenkins Pipeline
 
-1. Log in to Jenkins at `https://swent0linux.asu.edu/jenkins`
+1. Log in to Jenkins at `https://swent0linux.asu.edu/jenkins/`
 2. Navigate to your group folder
 3. Click **New Item** → name it `Example_2` → select **Pipeline** → click OK
 4. Under **Pipeline**, set **Definition** to `Pipeline script from SCM`
