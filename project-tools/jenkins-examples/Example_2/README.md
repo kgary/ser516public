@@ -41,7 +41,7 @@ Make sure you have the following installed:
 
 > **Important:** Do NOT commit directly to the class repo. Instead, create your own GitHub repository and copy the example files into it.
 
-1. Create a new repository on GitHub (e.g. `my-ser516-ica`)
+1. Create a new public repository on GitHub (e.g. `my-ser516-ica`)
 2. Clone the class repo to get the example files:
 ```bash
 git clone -b jenkins-examples <class-repo-url>
