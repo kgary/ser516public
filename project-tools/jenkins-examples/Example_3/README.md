@@ -145,13 +145,13 @@ PASSED
 > **Note:** Use `https://swent0linux.asu.edu/jenkins` for the class Jenkins server. If you have trouble accessing it, you can run Jenkins locally on your machine — refer to the course material for local Jenkins setup instructions.
 
 1. Log in to Jenkins
-2. Navigate to your group folder
+2. Navigate to your group folder -> you would probably be inside your respective groups when you login(check left top corner, you will be able to see your group number).
 3. Click **New Item** → name it `Example_3` → select **Pipeline** → click OK
 4. Under **Pipeline**, set **Definition** to `Pipeline script from SCM`
 5. Set **SCM** to `Git` and enter your own repository URL
 6. Under **Branches to build**, enter the branch name of your own repository (e.g. `*/main` or `*/master`)
 7. Set **Script Path** to `Example_3/Jenkinsfile`
-8. Under **Build Triggers**, check **Poll SCM** and set the schedule to `* * * * *` (polls every minute)
+8. Under **Triggers**, check **Poll SCM** and set the schedule to `* * * * *` (polls every minute)
 9. Click **Save** then click **Build Now** to trigger the first build
 
 > **Important — Docker Agent:**  
