@@ -94,6 +94,10 @@ my-ser516-ica/
     ├── README.md
     └── src/
 ```
+
+### you can also download the Example_3 [here](https://drive.google.com/file/d/1fOvnuz2dDf46pBDd7A3I6iyovdd3B6er/view?usp=sharing). And you can directly move into your repo.
+
+
 ### 2.4 — Verify the Jenkinsfile
 > **Important:** Open `Example_2/Jenkinsfile` and make sure the `dir()` block says `Example_3` or the directory to where Example_2 exists on your local, and NOT the full class repo path. It should look like this:
 > ```groovy
