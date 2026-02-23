@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  ser516-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ser516-demo:local
+    container_name: ser516-demo

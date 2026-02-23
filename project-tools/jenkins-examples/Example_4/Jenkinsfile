@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        // Stage 1: Build and Test
+        // Compiles the Java code, runs unit tests, and packages the JAR
+        stage('Build and Test') {
+            steps {
+                // Navigate to the project directory
+                dir('project-tools/jenkins-examples/Example_4') {
+                    // Run Maven tests in batch mode (non-interactive)
+                    sh 'mvn -B test'
+                    // Build the JAR file
+                    sh 'mvn -B package'
+                }
+            }
+        }
+        
+        // Stage 2: Docker Build
+        // Creates a Docker image with the compiled application
+        stage('Docker Build') {
+            steps {
+                dir('project-tools/jenkins-examples/Example_4') {
+                    // Build Docker image and tag it with Jenkins build number
+                    // The multi-stage Dockerfile compiles the app inside the image
+                    sh 'docker build -t ser516-demo:${BUILD_NUMBER} .'
+                }
+            }
+        }
+        
+        // Stage 3: Docker Smoke Test
+        // Runs the containerized app to verify it works correctly
+        stage('Docker Smoke Test') {
+            steps {
+                dir('project-tools/jenkins-examples/Example_4') {
+                    // Run the container and auto-remove it after execution
+                    // Pipeline fails if the app exits with an error
+                    sh 'docker run --rm ser516-demo:${BUILD_NUMBER}'
+                }
+            }
+        }
+    }
+}
