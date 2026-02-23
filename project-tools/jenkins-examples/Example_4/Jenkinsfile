@@ -5,6 +5,13 @@ pipeline {
         // Stage 1: Build and Test
         // Compiles the Java code, runs unit tests, and packages the JAR
         stage('Build and Test') {
+            agent {
+                // Use Maven Docker image for build stage
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-17'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
                 // Navigate to the project directory
                 dir('project-tools/jenkins-examples/Example_4') {
