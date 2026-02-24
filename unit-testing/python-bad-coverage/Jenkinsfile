@@ -1,19 +1,21 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3'
-            args '-u root'
-        }
-    }
+    agent none
     
     stages {
         stage('Checkout') {
+            agent any
             steps {
                 checkout scm
             }
         }
         
         stage('Install Dependencies') {
+            agent {
+                docker {
+                    image 'python:3'
+                    args '-u root'
+                }
+            }
             steps {
                 dir('unit-testing/python-bad-coverage') {
                     sh '''
@@ -26,9 +28,18 @@ pipeline {
         }
         
         stage('Test') {
+            agent {
+                docker {
+                    image 'python:3'
+                    args '-u root'
+                }
+            }
             steps {
                 dir('unit-testing/python-bad-coverage') {
                     sh '''
+                        pip3 install poetry==1.6.1
+                        poetry config virtualenvs.in-project true
+                        poetry install --no-interaction --no-ansi
                         poetry run pytest --verbose \
                             --cov=src/calculator \
                             --cov-report=html:htmlcov \
@@ -41,36 +52,94 @@ pipeline {
         }
         
         stage('BDD Tests') {
+            agent {
+                docker {
+                    image 'python:3'
+                    args '-u root'
+                }
+            }
             steps {
                 dir('unit-testing/python-bad-coverage') {
-                    sh 'poetry run behave --format=pretty'
+                    sh '''
+                        pip3 install poetry==1.6.1
+                        poetry config virtualenvs.in-project true
+                        poetry install --no-interaction --no-ansi
+                        poetry run behave --format=pretty
+                    '''
                 }
             }
         }
         
         stage('Pylint Analysis') {
+            agent {
+                docker {
+                    image 'python:3'
+                    args '-u root'
+                }
+            }
             steps {
                 dir('unit-testing/python-bad-coverage') {
-                    sh 'poetry run pylint src/calculator --output-format=parseable --reports=yes > pylint-report.txt || true'
+                    sh '''
+                        pip3 install poetry==1.6.1
+                        poetry config virtualenvs.in-project true
+                        poetry install --no-interaction --no-ansi
+                        poetry run pylint src/calculator --output-format=parseable --reports=yes > pylint-report.txt || true
+                    '''
                 }
+            }
+        }
+
+        stage('Docker Build') {
+            agent any
+            steps {
+                dir('unit-testing/python-bad-coverage') {
+                    sh "docker build -t python-bad-coverage:${BUILD_NUMBER} ."
+                    sh "docker tag python-bad-coverage:${BUILD_NUMBER} python-bad-coverage:latest"
+                }
+            }
+        }
+
+        stage('Sanity Check') {
+            agent any
+            steps {
+                script {
+                    def output = sh(
+                        script: "docker run --rm python-bad-coverage:${BUILD_NUMBER}",
+                        returnStdout: true
+                    ).trim()
+                    echo "Container output: ${output}"
+                    if (!output.contains('Result: 5')) {
+                        error "Sanity check failed! Expected 'Result: 5' but got: ${output}"
+                    }
+                    echo 'Sanity check passed — container is working as intended.'
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            agent any
+            steps {
+                sh "docker rmi python-bad-coverage:${BUILD_NUMBER} python-bad-coverage:latest || true"
             }
         }
     }
     
     post {
         always {
-            junit allowEmptyResults: true, testResults: 'unit-testing/python-bad-coverage/test-results.xml'
-            
-            publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'unit-testing/python-bad-coverage/htmlcov',
-                reportFiles: 'index.html',
-                reportName: 'Coverage Report'
-            ])
-            
-            archiveArtifacts artifacts: 'unit-testing/python-bad-coverage/coverage.xml,unit-testing/python-bad-coverage/pylint-report.txt', allowEmptyArchive: true
+            node('built-in') {
+                junit allowEmptyResults: true, testResults: 'unit-testing/python-bad-coverage/test-results.xml'
+                
+                publishHTML([
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'unit-testing/python-bad-coverage/htmlcov',
+                    reportFiles: 'index.html',
+                    reportName: 'Coverage Report'
+                ])
+                
+                archiveArtifacts artifacts: 'unit-testing/python-bad-coverage/coverage.xml,unit-testing/python-bad-coverage/pylint-report.txt', allowEmptyArchive: true
+            }
         }
         
         success {
@@ -82,3 +151,4 @@ pipeline {
         }
     }
 }
+
