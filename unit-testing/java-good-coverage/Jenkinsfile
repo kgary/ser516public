@@ -51,6 +51,37 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                dir('unit-testing/java-good-coverage') {
+                    sh "docker build -t java-good-coverage:${BUILD_NUMBER} ."
+                    sh "docker tag java-good-coverage:${BUILD_NUMBER} java-good-coverage:latest"
+                }
+            }
+        }
+
+        stage('Sanity Check') {
+            steps {
+                script {
+                    def output = sh(
+                        script: "docker run --rm java-good-coverage:${BUILD_NUMBER}",
+                        returnStdout: true
+                    ).trim()
+                    echo "Container output: ${output}"
+                    if (!output.contains('Result: 5')) {
+                        error "Sanity check failed! Expected 'Result: 5' but got: ${output}"
+                    }
+                    echo 'Sanity check passed — container is working as intended.'
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh "docker rmi java-good-coverage:${BUILD_NUMBER} java-good-coverage:latest || true"
+            }
+        }
     }
 
     post {
