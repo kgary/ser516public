@@ -9,8 +9,6 @@ WORKDIR /build
 
 # Copy dependency descriptors first for better layer caching
 COPY pom.xml .
-COPY .mvn/ .mvn/ 2>/dev/null || true
-COPY mvnw* ./ 2>/dev/null || true
 
 # Copy full source
 COPY src ./src
