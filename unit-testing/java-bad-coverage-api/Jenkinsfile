@@ -1,0 +1,130 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('unit-testing/java-bad-coverage-api') {
+                    sh 'mvn clean compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('unit-testing/java-bad-coverage-api') {
+                    sh 'mvn verify'
+                }
+            }
+        }
+
+        stage('SpotBugs Analysis') {
+            steps {
+                dir('unit-testing/java-bad-coverage-api') {
+                    sh 'mvn spotbugs:spotbugs'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                dir('unit-testing/java-bad-coverage-api') {
+                    sh 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                dir('unit-testing/java-bad-coverage-api') {
+                    sh "docker build -t java-bad-coverage-api:${BUILD_NUMBER} ."
+                    sh "docker tag java-bad-coverage-api:${BUILD_NUMBER} java-bad-coverage-api:latest"
+                }
+            }
+        }
+
+        stage('Sanity Check') {
+            steps {
+                script {
+                    // Start the API container on port 8080.
+                    // NOTE: This container is intentionally NOT stopped after the pipeline.
+                    //       It remains running on the DinD engine for inspection / demo use.
+                    //
+                    // To STOP and REMOVE it manually, run one of the following:
+                    //
+                    //   Option A – from inside jenkins-server (DOCKER_HOST already set to DinD):
+                    //     docker stop calc-api && docker rm calc-api
+                    //
+                    //   Option B – from the Ubuntu host via jenkins-docker:
+                    //     docker exec -it jenkins-docker docker stop calc-api
+                    //     docker exec -it jenkins-docker docker rm calc-api
+
+                    // Remove any previously lingering container with the same name
+                    sh 'docker rm -f calc-api || true'
+
+                    // Start the new container (no --rm, so it persists)
+                    sh "docker run -d --name calc-api -p 8080:8080 java-bad-coverage-api:${BUILD_NUMBER}"
+
+                    // Wait for Spring Boot to finish startup (~10 s)
+                    sleep 10
+
+                    // Run the curl-based sanity check
+                    sh 'chmod +x unit-testing/java-bad-coverage-api/SanityCheck.sh'
+                    sh 'unit-testing/java-bad-coverage-api/SanityCheck.sh'
+
+                    echo 'Sanity check passed — container calc-api is still running on port 8080.'
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                // Remove the Docker IMAGE only. The container stays alive.
+                sh "docker rmi java-bad-coverage-api:${BUILD_NUMBER} java-bad-coverage-api:latest || true"
+            }
+        }
+    }
+
+    post {
+        always {
+            // Publish JUnit test results
+            junit '**/target/surefire-reports/*.xml'
+
+            // Publish JaCoCo code coverage
+            recordCoverage(tools: [[parser: 'JACOCO',
+                pattern: 'unit-testing/java-bad-coverage-api/target/site/jacoco/jacoco.xml']])
+
+            // Archive SpotBugs HTML report
+            archiveArtifacts artifacts: '**/target/spotbugs.html', allowEmptyArchive: true
+
+            // Archive built JAR
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+        }
+
+        success {
+            echo '''
+Build succeeded!
+ ─────────────────────────────────────────────────────
+ The calc-api container is still running on port 8080.
+ To remove it manually:
+   docker stop calc-api && docker rm calc-api
+ ─────────────────────────────────────────────────────
+'''
+        }
+
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
