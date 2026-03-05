@@ -81,14 +81,12 @@ pipeline {
                     // Start the new container (no --rm, so it persists after the pipeline)
                     sh "docker run -d --name calc-api -p 8080:8080 java-bad-coverage-api:${BUILD_NUMBER}"
 
-                    // Wait for Spring Boot to finish startup (~10 s)
-                    sleep 10
-
-                    // Run the curl-based sanity check
+                    // SanityCheck.sh connects to docker:8080 (the DinD sidecar hostname)
+                    // and retries for up to 60 s while Spring Boot starts up.
                     sh 'chmod +x unit-testing/java-bad-coverage-api/SanityCheck.sh'
                     sh 'unit-testing/java-bad-coverage-api/SanityCheck.sh'
 
-                    echo 'Sanity check passed — container calc-api is still running on port 8080.'
+                    echo 'Sanity check passed — container calc-api is still running on port 8080 of jenkins-docker.'
                 }
             }
         }
