@@ -70,10 +70,15 @@ pipeline {
                     //     docker exec -it jenkins-docker docker stop calc-api
                     //     docker exec -it jenkins-docker docker rm calc-api
 
-                    // Remove any previously lingering container with the same name
+                    // Step 1: Remove the previous calc-api container by name (if it exists)
                     sh 'docker rm -f calc-api || true'
 
-                    // Start the new container (no --rm, so it persists)
+                    // Step 2: Also kill any OTHER container still occupying port 8080.
+                    //         This handles the case where a previous build's container
+                    //         was started under a different name but left the port bound.
+                    sh 'docker ps -q --filter "publish=8080" | xargs -r docker rm -f || true'
+
+                    // Start the new container (no --rm, so it persists after the pipeline)
                     sh "docker run -d --name calc-api -p 8080:8080 java-bad-coverage-api:${BUILD_NUMBER}"
 
                     // Wait for Spring Boot to finish startup (~10 s)
