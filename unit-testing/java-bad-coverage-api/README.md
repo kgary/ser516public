@@ -94,7 +94,17 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 | Package | `mvn package -DskipTests` |
 | Docker Build | Builds multi-stage image, tags as `latest` |
 | Sanity Check | Starts `calc-api` container, calls `SanityCheck.sh`, **container stays running** |
+| Postman Tests | Runs Newman against the collection in `postman/`, publishes HTML report |
 | Cleanup | Removes the Docker *image* only (container persists) |
+
+### Postman/Newman in Jenkins
+
+- Collection: `postman/newman-jenkins-collection.postman_collection.json`
+- Environment: `postman/newman-jenkins-environment.postman_environment.json`
+- HTML report artifact: `target/newman-report.html`
+
+In Jenkins (DinD), Newman overrides `base_url` to `http://docker:8080`.
+The environment file can still keep `http://localhost:8080` for local use.
 
 ---
 
