@@ -1,0 +1,310 @@
+{
+  "info": {
+    "_postman_id": "03f2fdc3-5a73-4cc6-8999-a47eb561c583",
+    "name": "newman-jenkins-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40028447"
+  },
+  "item": [
+    {
+      "name": "api-test-1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"a\": 1,\n    \"b\": 5,\n    \"operation\":\"*\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/calculator/calculate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "calculator",
+            "calculate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "divide-by-zero-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Error message is divide-by-zero\", function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property(\"error\");",
+              "  pm.expect(json.error).to.eql(\"Cannot divide by zero\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "packages": {},
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"a\": 11,\n    \"b\": 0,\n    \"operation\":\"/\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/calculator/calculate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "calculator",
+            "calculate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "unknown-operator-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Error message indicates unknown operation\", function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property(\"error\");",
+              "  pm.expect(json.error).to.include('Unknown operation: \"%\"');",
+              "  pm.expect(json.error).to.include(\"Supported: +, -, *, /\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"a\": 11,\n    \"b\": 1,\n    \"operation\":\"%\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/calculator/calculate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "calculator",
+            "calculate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "blank-operator-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Error message is empty-operation\", function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property(\"error\");",
+              "  pm.expect(json.error).to.eql(\"Operation symbol must not be empty\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"a\": 11,\n    \"b\": 1,\n    \"operation\":\"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/calculator/calculate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "calculator",
+            "calculate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "wrong-type-test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400 for type mismatch\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Error payload field mismatch\", function () {",
+              "  const json = pm.response.json();",
+              "  pm.expect(json.status).to.eql(400);",
+              "  pm.expect(json.error).to.eql(\"Bad Request\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"a\": \"one\",\n    \"b\": 5,\n    \"operation\":\"*\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/calculator/calculate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "calculator",
+            "calculate"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 # Stage 2: Package the JAR into a slim JRE runtime image.
 
 # ====== Stage 1: Build ======
-FROM eclipse-temurin:17-jdk-alpine AS builder
+FROM eclipse-temurin:17-jdk AS builder
 
 WORKDIR /build
 
@@ -14,11 +14,12 @@ COPY pom.xml .
 COPY src ./src
 
 # Build fat JAR, skip tests (tests run earlier in the pipeline)
-RUN apk add --no-cache maven && \
+RUN apt-get update && \
+    apt-get install -y maven && \
     mvn package -DskipTests --no-transfer-progress
 
 # ====== Stage 2: Runtime ======
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 
 LABEL maintainer="SER-516 Team"
 LABEL description="Calculator REST API – java-bad-coverage-api"
@@ -26,7 +27,7 @@ LABEL description="Calculator REST API – java-bad-coverage-api"
 WORKDIR /app
 
 # Install curl for health-check and sanity-check script
-RUN apk add --no-cache curl
+RUN apt-get update && apt-get install -y curl
 
 # Copy built JAR from builder stage
 COPY --from=builder /build/target/calculator-api-1.0-SNAPSHOT.jar app.jar

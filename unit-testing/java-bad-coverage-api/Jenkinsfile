@@ -91,6 +91,26 @@ pipeline {
             }
         }
 
+        stage('Postman Tests') {
+            steps {
+                script {
+                    // Install Newman and reporters if not already present
+                    sh 'npm install -g newman newman-reporter-htmlextra 2>/dev/null || true'
+
+                    // Run the collection against the DinD hostname (docker:8080).
+                    // base_url is overridden here so the environment file's
+                    // localhost value is not used inside Jenkins.
+                    sh '''
+                        newman run unit-testing/java-bad-coverage-api/postman/newman-jenkins-collection.postman_collection.json \
+                            -e unit-testing/java-bad-coverage-api/postman/newman-jenkins-environment.postman_environment.json \
+                            --env-var "base_url=http://docker:8080" \
+                            --reporters cli,htmlextra \
+                            --reporter-htmlextra-export unit-testing/java-bad-coverage-api/target/newman-report.html
+                    '''
+                }
+            }
+        }
+
         stage('Cleanup') {
             steps {
                 // Remove the Docker IMAGE only. The container stays alive.
@@ -107,6 +127,9 @@ pipeline {
             // Publish JaCoCo code coverage
             recordCoverage(tools: [[parser: 'JACOCO',
                 pattern: 'unit-testing/java-bad-coverage-api/target/site/jacoco/jacoco.xml']])
+
+            // Archive Newman HTML report
+            archiveArtifacts artifacts: '**/target/newman-report.html', allowEmptyArchive: true
 
             // Archive SpotBugs HTML report
             archiveArtifacts artifacts: '**/target/spotbugs.html', allowEmptyArchive: true
