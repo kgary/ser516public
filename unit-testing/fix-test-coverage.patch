@@ -1,0 +1,63 @@
+diff --git a/unit-testing/java-bad-coverage/pom.xml b/unit-testing/java-bad-coverage/pom.xml
+index 1234567..abcdefg 100644
+--- a/unit-testing/java-bad-coverage/pom.xml
++++ b/unit-testing/java-bad-coverage/pom.xml
+@@ -130,7 +130,7 @@
+                                     <limits>
+                                         <limit>
+                                             <counter>LINE</counter>
+                                             <value>COVEREDRATIO</value>
+-                                            <minimum>0.30</minimum>
++                                            <minimum>0.90</minimum>
+                                         </limit>
+                                     </limits>
+                                 </rule>
+diff --git a/unit-testing/java-bad-coverage/Jenkinsfile b/unit-testing/java-bad-coverage/Jenkinsfile
+index 1234567..abcdefg 100644
+--- a/unit-testing/java-bad-coverage/Jenkinsfile
++++ b/unit-testing/java-bad-coverage/Jenkinsfile
+@@ -22,17 +22,10 @@ pipeline {
+         stage('Test') {
+             steps {
+                 dir('unit-testing/java-bad-coverage') {
+-                    sh 'mvn test'
++                    sh 'mvn verify'
+                 }
+             }
+         }
+ 
+-        stage('Code Coverage') {
+-            steps {
+-                dir('unit-testing/java-bad-coverage') {
+-                    sh 'mvn jacoco:report'
+-                }
+-            }
+-        }
+-
+         stage('SpotBugs Analysis') {
+             steps {
+diff --git a/unit-testing/python-bad-coverage/pyproject.toml b/unit-testing/python-bad-coverage/pyproject.toml
+index 1234567..abcdefg 100644
+--- a/unit-testing/python-bad-coverage/pyproject.toml
++++ b/unit-testing/python-bad-coverage/pyproject.toml
+@@ -29,7 +29,7 @@ addopts = [
+     "--cov-report=html:htmlcov",
+     "--cov-report=xml:coverage.xml",
+     "--cov-report=term-missing",
+-    "--cov-fail-under=30"
++    "--cov-fail-under=90"
+ ]
+ 
+ [tool.coverage.run]
+diff --git a/unit-testing/python-bad-coverage/Jenkinsfile b/unit-testing/python-bad-coverage/Jenkinsfile
+index 1234567..abcdefg 100644
+--- a/unit-testing/python-bad-coverage/Jenkinsfile
++++ b/unit-testing/python-bad-coverage/Jenkinsfile
+@@ -33,7 +33,6 @@ pipeline {
+                             --cov-report=html:htmlcov \
+                             --cov-report=xml:coverage.xml \
+                             --cov-report=term-missing \
+-                            --cov-fail-under=30 \
+                             --junitxml=test-results.xml
+                     '''
+                 }

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  calculator-python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: poetry run pytest --verbose
+    container_name: python-good-coverage-tests
+    
+  calculator-python-bdd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: poetry run behave --format=pretty
+    container_name: python-good-coverage-bdd

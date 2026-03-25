@@ -18,7 +18,7 @@ The `java-bad-coverage` and `python-bad-coverage` projects have insufficient tes
 
 **Project**: `java-bad-coverage`  
 **Coverage Tool**: JaCoCo  
-**Current Threshold**: 50%  
+**Current Threshold**: 30%  
 **Test Status**: 1 test method (`testAdd`) out of 6+ methods in `Calculator.java`
 
 **Untested methods**:
@@ -37,17 +37,17 @@ Create a new Jenkins Pipeline job pointing to `unit-testing/java-bad-coverage/Je
 
 Trigger the Jenkins build.
 
-**Output**: Build succeeds but with low coverage (~28%)
+**Output**: Build succeeds but with low coverage (~44%)
 
 Jenkins shows:
 - Build Status: SUCCESS
-- Coverage Report: (below 50% threshold but passing)
+- Coverage Report: (30% threshold passing)
     - Instruction: 40.39%
     - Branch: 30%
     - Line: 48.33%
     - Method: 50%
 
-![Screenshot: 1-java-low-coverage-report.png]
+![Java Bad Coverage Report](unit-testing/tutorial-images/java_bad_coverage_report.png)
 
 ### Step 3: Increase Threshold to 90%
 
@@ -67,18 +67,18 @@ Jenkins automatically triggers build (or trigger manually).
 
 Jenkins Console Output:
 ```
-[ERROR] Failed to execute goal org.jacoco:jacoco-maven-plugin:0.8.12:check (check)
-        on project calculator-demo: Coverage checks have not been met.
-[ERROR] Rule violated for bundle calculator-demo: 
-        lines covered ratio is 0.28, but expected minimum is 0.90
+[ERROR] Failed to execute goal org.jacoco:jacoco-maven-plugin:0.8.12:check (check) on project
+        calculator-demo: Coverage checks have not been met.
+[WARNING] Rule violated for bundle calculator-demo: lines covered ratio is 0.48, but expected
+          minimum is 0.90
 [ERROR] BUILD FAILURE
 ```
 
 Jenkins shows:
 - Build Status: FAILED (red)
-- Coverage: 28% (below 90% threshold)
+- Coverage: 48% (below 90% threshold)
 
-![Screenshot: 2-java-build-failure.png]
+![Build Failed Report Coverage](unit-testing/tutorial-images/java_bad_coverage_failed_report.png)
 
 ### Step 5: Fix - Add Missing Tests
 
@@ -155,27 +155,6 @@ Jenkins automatically builds on commit (or trigger manually).
 
 **Output**: Build SUCCEEDS
 
-Jenkins Console Output:
-```
-[INFO] All coverage checks have been met.
-[INFO] BUILD SUCCESS
-```
-
-Jenkins shows:
-- Build Status: SUCCESS (green)
-- Coverage: 95% (exceeds 90% threshold)
-- JaCoCo report shows green highlighting on tested methods
-
-![Screenshot: 3-java-green-build.png]
-
-### Step 7: View Coverage Report in Jenkins
-
-Navigate to Jenkins job → Latest Build → Coverage Report
-
-**Output**: JaCoCo coverage report showing 95%+ coverage with detailed breakdowns
-
-![Screenshot: 4-java-improved-coverage.png]
-
 ---
 
 ## Python Coverage Failure Demo
@@ -201,23 +180,24 @@ Create a new Jenkins Pipeline job pointing to `unit-testing/python-bad-coverage/
 
 Trigger the Jenkins build.
 
-**Output**: Build succeeds but with low coverage (~33%)
+**Output**: Build succeeds but with low coverage (60%)
 
 Jenkins Console Output:
 ```
 ---------- coverage: platform linux, python 3.x -----------
-Name                            Stmts   Miss  Cover
----------------------------------------------------
-src/calculator/calculator.py       27     18    33%
----------------------------------------------------
-TOTAL                              27     18    33%
+Name                            Stmts   Miss   Cover
+-----------------------------------------------------
+src/calculator/calculator.py       18     8    55.56%
+src/calculator/__init__.py         2      0    100%
+-----------------------------------------------------
+TOTAL                              20     8    60%
 ```
 
 Jenkins shows:
 - Build Status: SUCCESS
-- Coverage Report: 33% (below 30% threshold but passing)
+- Coverage Report: 60% (30% threshold passing)
 
-![Screenshot: 5-python-low-coverage.png]
+![Python Low Coverage Report](/unit-testing/tutorial-images/python_bad_coverage_report.png)
 
 ### Step 3: Increase Threshold to 90%
 
@@ -237,15 +217,15 @@ Jenkins automatically triggers build (or trigger manually).
 
 Jenkins Console Output:
 ```
-FAILED tests/test_calculator.py - Failed: total coverage: 33.33%
-ERROR: InvocationError for command pytest (exited with code 1)
+FAIL Required test coverage of 90% not reached. Total coverage: 60.00%
+Build failed!
 ```
 
 Jenkins shows:
-- Build Status: FAILED (red)
-- Coverage: 33% (below 90% threshold)
+- Build Status: FAILED (Red)
+- Coverage Report: 60% (below 90% threshold)
 
-![Screenshot: 6-python-build-failure.png]
+![Python Build Failure](unit-testing/tutorial-images/python_bad_coverage_failed_report.png)
 
 ### Step 5: Fix - Add Missing Tests
 
@@ -307,32 +287,6 @@ Jenkins automatically builds on commit (or trigger manually).
 
 **Output**: Build SUCCEEDS
 
-Jenkins Console Output:
-```
----------- coverage: platform linux, python 3.x -----------
-Name                            Stmts   Miss  Cover
----------------------------------------------------
-src/calculator/calculator.py       27      1    96%
----------------------------------------------------
-TOTAL                              27      1    96%
-
-Required test coverage of 90% reached. Total coverage: 96.30%
-```
-
-Jenkins shows:
-- Build Status: SUCCESS (green)
-- Coverage: 96% (exceeds 90% threshold)
-
-![Screenshot: 7-python-green-build.png]
-
-### Step 7: View Coverage Report in Jenkins
-
-Navigate to Jenkins job → Latest Build → Coverage Report
-
-**Output**: Coverage report showing 96%+ coverage with detailed breakdowns
-
-![Screenshot: 8-python-improved-coverage.png]
-
 ---
 
 ## Using the Patch File
@@ -350,26 +304,6 @@ git push
 Jenkins will automatically trigger and the build will succeed.
 
 See [PATCH-README.md](PATCH-README.md) for detailed instructions.
-
----
-
-## Summary
-
-### Java Results
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Test Methods | 1 | 10 |
-| Line Coverage | 28% | 95% |
-| Jenkins Build (90% threshold) | FAIL | PASS |
-
-### Python Results
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Test Methods | 2 | 10 |
-| Line Coverage | 33% | 96% |
-| Jenkins Build (90% threshold) | FAIL | PASS |
 
 ---
 
@@ -395,15 +329,13 @@ Both projects include Jenkinsfiles that execute the following stages:
 
 **Screenshot**: Pipeline stages visualization in Jenkins
 
-![Screenshot: 9-jenkins-pipeline.png]
-
 ---
 
 ## Accessing Coverage Reports in Jenkins
 
 ### Method 1: Build Artifacts
 1. Navigate to Jenkins job
-2. Click on build number (e.g., #42)
+2. Click on build number (e.g., #10)
 3. Click "Build Artifacts"
 4. Download and view coverage reports
 
@@ -412,11 +344,6 @@ If coverage plugins are installed:
 1. Navigate to Jenkins job → Latest Build
 2. Click "Coverage Report" in left sidebar
 3. View interactive coverage details
-
-### Method 3: Archived Reports
-Coverage reports are archived in Jenkins workspace:
-- **Java**: `target/site/jacoco/index.html`
-- **Python**: `htmlcov/index.html`
 
 ---
 
@@ -437,9 +364,3 @@ Coverage reports are archived in Jenkins workspace:
 
 ---
 
-## References
-
-- [JaCoCo Documentation](https://www.jacoco.org/jacoco/trunk/doc/)
-- [pytest-cov Documentation](https://pytest-cov.readthedocs.io/)
-- [Jenkins Pipeline Documentation](https://www.jenkins.io/doc/book/pipeline/)
-- [PATCH-README.md](PATCH-README.md) - Patch file usage guide

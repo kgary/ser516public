@@ -1,7 +1,7 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3'
+        dockerfile {
+            dir 'unit-testing/python-bad-coverage'
             args '-u root'
         }
     }
@@ -34,7 +34,6 @@ pipeline {
                             --cov-report=html:htmlcov \
                             --cov-report=xml:coverage.xml \
                             --cov-report=term-missing \
-                            --cov-fail-under=30 \
                             --junitxml=test-results.xml
                     '''
                 }
