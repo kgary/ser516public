@@ -89,12 +89,12 @@ pipeline {
                     // Install Newman and reporters if not already present
                     sh 'npm install -g newman newman-reporter-htmlextra 2>/dev/null || true'
 
-                    // Run the collection against Traefik (http://traefik/group0/calculator).
-                    // Traefik is on the jenkins-docker_jenkins network and routes by path prefix.
+                    // Run the collection against Traefik via DinD's exposed port.
+                    // Jenkins container → docker:9080 (DinD) → Traefik → calc-api
                     sh '''
                         newman run unit-testing/java-bad-coverage-api/postman/newman-jenkins-collection.postman_collection.json \
                             -e unit-testing/java-bad-coverage-api/postman/newman-jenkins-environment.postman_environment.json \
-                            --env-var "base_url=http://traefik/group0/calculator" \
+                            --env-var "base_url=http://docker:9080/group0/calculator" \
                             --reporters cli,htmlextra \
                             --reporter-htmlextra-export unit-testing/java-bad-coverage-api/target/newman-report.html
                     '''
