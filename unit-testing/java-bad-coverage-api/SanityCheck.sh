@@ -4,15 +4,16 @@
 # Validates the running Calculator API container by sending a POST request
 # and checking the response contains the expected result.
 #
-# With Traefik, the calc-api container is NOT published on a port.
-# Instead, Traefik routes requests by path prefix on the jenkins-docker_jenkins
-# network. We call http://traefik/group0/calculator/api/calculator/calculate.
+# Traefik runs INSIDE DinD on the traefik-net network.
+# Jenkins executes this script inside the Jenkins container which also talks
+# to the DinD daemon (DOCKER_HOST=tcp://docker:2376).
+# We call Traefik via its DinD-internal container DNS name on port 80.
 #
 # Usage (called from the Jenkins pipeline):
 #   bash SanityCheck.sh
 # =============================================================================
 
-# Call via Traefik — reachable by Docker DNS name on jenkins-docker_jenkins network
+# Call via Traefik inside DinD — DNS name resolves on the traefik-net network
 API_URL="http://traefik/group0/calculator/api/calculator/calculate"
 PAYLOAD='{"a":2,"b":3,"operation":"+"}'
 EXPECTED='"result":5.0'

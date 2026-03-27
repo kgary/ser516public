@@ -57,25 +57,24 @@ pipeline {
         stage('Sanity Check') {
             steps {
                 script {
-                    // Start the API container registered with Traefik (no port binding needed).
-                    // Traefik routes https://swent0linux.asu.edu/group0/calculator/* to this container.
+                    // Traefik runs inside DinD and is managed separately by setup-dind-traefik.sh.
+                    // This stage only deploys the student container onto traefik-net.
                     // NOTE: This container is intentionally NOT stopped after the pipeline.
-                    //
                     // To STOP and REMOVE it manually:
                     //   docker stop calc-api && docker rm calc-api
 
-                    // Step 1: Remove the previous calc-api container by name (if it exists)
+                    // 1. Remove previous calc-api container (if it exists)
                     sh 'docker rm -f calc-api || true'
 
-                    // Step 2: Start container with Traefik labels (no -p port binding needed)
+                    // 2. Start calc-api on traefik-net with Traefik labels (no -p needed)
                     sh """docker run -d --name calc-api \
-                        --network jenkins-docker_jenkins \
+                        --network traefik-net \
                         --label 'traefik.enable=true' \
                         --label 'traefik.http.routers.g0-calculator.rule=PathPrefix(`/group0/calculator`)' \
                         --label 'traefik.http.services.g0-calculator.loadbalancer.server.port=8080' \
                         java-bad-coverage-api:${BUILD_NUMBER}"""
 
-                    // SanityCheck.sh calls via Traefik (http://traefik/group0/calculator/...)
+                    // 3. SanityCheck calls Traefik via its DinD-internal DNS name
                     sh 'chmod +x unit-testing/java-bad-coverage-api/SanityCheck.sh'
                     sh 'unit-testing/java-bad-coverage-api/SanityCheck.sh'
 
