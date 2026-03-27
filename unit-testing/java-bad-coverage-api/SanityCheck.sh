@@ -4,17 +4,16 @@
 # Validates the running Calculator API container by sending a POST request
 # and checking the response contains the expected result.
 #
-# In the DinD setup, the calc-api container's port is published on the
-# jenkins-docker sidecar (hostname "docker"), NOT on jenkins-server (localhost).
-# Jenkins itself runs on localhost:8080, so we must use docker:8080.
+# With Traefik, the calc-api container is NOT published on a port.
+# Instead, Traefik routes requests by path prefix on the jenkins-docker_jenkins
+# network. We call http://traefik/group0/calculator/api/calculator/calculate.
 #
 # Usage (called from the Jenkins pipeline):
 #   bash SanityCheck.sh
 # =============================================================================
 
-# Host where calc-api is reachable from jenkins-server (DinD network alias)
-API_HOST="${CALC_API_HOST:-docker}"
-API_URL="http://${API_HOST}:8080/api/calculator/calculate"
+# Call via Traefik — reachable by Docker DNS name on jenkins-docker_jenkins network
+API_URL="http://traefik/group0/calculator/api/calculator/calculate"
 PAYLOAD='{"a":2,"b":3,"operation":"+"}'
 EXPECTED='"result":5.0'
 

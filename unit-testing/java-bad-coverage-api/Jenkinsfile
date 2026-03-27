@@ -57,36 +57,29 @@ pipeline {
         stage('Sanity Check') {
             steps {
                 script {
-                    // Start the API container on port 8080.
+                    // Start the API container registered with Traefik (no port binding needed).
+                    // Traefik routes https://swent0linux.asu.edu/group0/calculator/* to this container.
                     // NOTE: This container is intentionally NOT stopped after the pipeline.
-                    //       It remains running on the DinD engine for inspection / demo use.
                     //
-                    // To STOP and REMOVE it manually, run one of the following:
-                    //
-                    //   Option A – from inside jenkins-server (DOCKER_HOST already set to DinD):
-                    //     docker stop calc-api && docker rm calc-api
-                    //
-                    //   Option B – from the Ubuntu host via jenkins-docker:
-                    //     docker exec -it jenkins-docker docker stop calc-api
-                    //     docker exec -it jenkins-docker docker rm calc-api
+                    // To STOP and REMOVE it manually:
+                    //   docker stop calc-api && docker rm calc-api
 
                     // Step 1: Remove the previous calc-api container by name (if it exists)
                     sh 'docker rm -f calc-api || true'
 
-                    // Step 2: Also kill any OTHER container still occupying port 8080.
-                    //         This handles the case where a previous build's container
-                    //         was started under a different name but left the port bound.
-                    sh 'docker ps -q --filter "publish=8080" | xargs -r docker rm -f || true'
+                    // Step 2: Start container with Traefik labels (no -p port binding needed)
+                    sh """docker run -d --name calc-api \
+                        --network jenkins-docker_jenkins \
+                        --label 'traefik.enable=true' \
+                        --label 'traefik.http.routers.g0-calculator.rule=PathPrefix(`/group0/calculator`)' \
+                        --label 'traefik.http.services.g0-calculator.loadbalancer.server.port=8080' \
+                        java-bad-coverage-api:${BUILD_NUMBER}"""
 
-                    // Start the new container (no --rm, so it persists after the pipeline)
-                    sh "docker run -d --name calc-api -p 8080:8080 java-bad-coverage-api:${BUILD_NUMBER}"
-
-                    // SanityCheck.sh connects to docker:8080 (the DinD sidecar hostname)
-                    // and retries for up to 60 s while Spring Boot starts up.
+                    // SanityCheck.sh calls via Traefik (http://traefik/group0/calculator/...)
                     sh 'chmod +x unit-testing/java-bad-coverage-api/SanityCheck.sh'
                     sh 'unit-testing/java-bad-coverage-api/SanityCheck.sh'
 
-                    echo 'Sanity check passed — container calc-api is still running on port 8080 of jenkins-docker.'
+                    echo 'Sanity check passed — calc-api accessible at https://swenv0linux.asu.edu/group0/calculator/api/calculator/calculate'
                 }
             }
         }
@@ -97,13 +90,12 @@ pipeline {
                     // Install Newman and reporters if not already present
                     sh 'npm install -g newman newman-reporter-htmlextra 2>/dev/null || true'
 
-                    // Run the collection against the DinD hostname (docker:8080).
-                    // base_url is overridden here so the environment file's
-                    // localhost value is not used inside Jenkins.
+                    // Run the collection against Traefik (http://traefik/group0/calculator).
+                    // Traefik is on the jenkins-docker_jenkins network and routes by path prefix.
                     sh '''
                         newman run unit-testing/java-bad-coverage-api/postman/newman-jenkins-collection.postman_collection.json \
                             -e unit-testing/java-bad-coverage-api/postman/newman-jenkins-environment.postman_environment.json \
-                            --env-var "base_url=http://docker:8080" \
+                            --env-var "base_url=http://traefik/group0/calculator" \
                             --reporters cli,htmlextra \
                             --reporter-htmlextra-export unit-testing/java-bad-coverage-api/target/newman-report.html
                     '''
@@ -142,7 +134,8 @@ pipeline {
             echo '''
 Build succeeded!
  ─────────────────────────────────────────────────────
- The calc-api container is still running on port 8080.
+ calc-api is running and routed via Traefik.
+ Public URL: https://swenv0linux.asu.edu/group0/calculator/api/calculator/calculate
  To remove it manually:
    docker stop calc-api && docker rm calc-api
  ─────────────────────────────────────────────────────
