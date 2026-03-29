@@ -93,14 +93,19 @@ pipeline {
         stage('Postman Tests') {
             steps {
                 script {
-                    // Use npx to run newman — avoids npm global PATH issues
-                    sh '''
-                        npx --yes newman run unit-testing/java-bad-coverage-api/postman/newman-jenkins-collection.postman_collection.json \
+                    // Run Newman via Docker — no Node.js/npx required on the agent
+                    sh """
+                        docker run --rm \
+                            --network traefik-net \
+                            -v "\${WORKSPACE}:/workspace" \
+                            -w /workspace \
+                            postman/newman:alpine \
+                            run unit-testing/java-bad-coverage-api/postman/newman-jenkins-collection.postman_collection.json \
                             -e unit-testing/java-bad-coverage-api/postman/newman-jenkins-environment.postman_environment.json \
-                            --env-var "base_url=http://docker:9080/group0/calculator" \
+                            --env-var "base_url=http://traefik:80/group0/calculator" \
                             --reporters cli,htmlextra \
                             --reporter-htmlextra-export unit-testing/java-bad-coverage-api/target/newman-report.html
-                    '''
+                    """
                 }
             }
         }
