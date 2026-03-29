@@ -31,13 +31,14 @@ for i in $(seq 1 $MAX_RETRIES); do
     RESPONSE=$(curl -s \
       -X POST "$API_URL" \
       -H 'Content-Type: application/json' \
-      -d "$PAYLOAD" 2>&1) && CURL_EXIT=0 || CURL_EXIT=$?
+      -d "$PAYLOAD" 2>&1)
+    CURL_EXIT=$?
 
-    if [ $CURL_EXIT -eq 0 ] && [ -n "$RESPONSE" ]; then
+    if echo "$RESPONSE" | grep -q "$EXPECTED"; then
         break
     fi
 
-    echo "Attempt $i/$MAX_RETRIES failed (curl exit $CURL_EXIT). Retrying in ${SLEEP_SEC}s..."
+    echo "Attempt $i/$MAX_RETRIES — got: '$RESPONSE'. Retrying in ${SLEEP_SEC}s..."
     sleep $SLEEP_SEC
 done
 
