@@ -78,7 +78,10 @@ pipeline {
                         --label 'traefik.http.services.g0-calculator.loadbalancer.server.port=8080' \
                         java-bad-coverage-api:${BUILD_NUMBER}"""
 
-                    // 3. SanityCheck calls Traefik via its DinD-internal DNS name
+                    // 3. Wait for Traefik to discover calc-api (Docker event propagation ~2-3s)
+                    sh 'sleep 5'
+
+                    // 4. SanityCheck calls Traefik via its DinD-internal DNS name
                     sh 'chmod +x unit-testing/java-bad-coverage-api/SanityCheck.sh'
                     sh 'unit-testing/java-bad-coverage-api/SanityCheck.sh'
 
