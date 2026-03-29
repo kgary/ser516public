@@ -67,11 +67,14 @@ pipeline {
                     sh 'docker rm -f calc-api || true'
 
                     // 2. Start calc-api on traefik-net with Traefik labels (no -p needed)
+                    // stripPrefix middleware strips /group0/calculator before forwarding to Spring Boot
                     sh """docker run -d --name calc-api \
                         --network traefik-net \
                         --label 'traefik.enable=true' \
                         --label 'traefik.http.routers.g0-calculator.entrypoints=web' \
                         --label 'traefik.http.routers.g0-calculator.rule=PathPrefix(`/group0/calculator`)' \
+                        --label 'traefik.http.routers.g0-calculator.middlewares=strip-g0-calculator' \
+                        --label 'traefik.http.middlewares.strip-g0-calculator.stripprefix.prefixes=/group0/calculator' \
                         --label 'traefik.http.services.g0-calculator.loadbalancer.server.port=8080' \
                         java-bad-coverage-api:${BUILD_NUMBER}"""
 
